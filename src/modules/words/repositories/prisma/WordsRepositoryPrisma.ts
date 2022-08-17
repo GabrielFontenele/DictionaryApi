@@ -30,11 +30,12 @@ export class WordsRepositoryPrisma implements IWordsRepository {
     });
     return words;
   }
+
   async findLikeByWordCount(search: string): Promise<number> {
     const total = await prisma.word.count({
       where: {
         word: {
-          contains: search,
+          startsWith: search,
         },
       },
     });
