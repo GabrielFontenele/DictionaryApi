@@ -12,20 +12,31 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid())
+  id       String     @id @default(uuid())
   name     String
-  email    String    @unique
+  email    String     @unique
   password String
   History  History[]
+  Favorite Favorite[]
 }
 
 model Word {
-  id      String    @id @default(uuid())
-  word    String
-  History History[]
+  id       String     @id @default(uuid())
+  word     String
+  History  History[]
+  Favorite Favorite[]
 }
 
 model History {
+  id     String   @id @default(uuid())
+  added  DateTime @default(now())
+  work   Word     @relation(fields: [wordId], references: [id])
+  wordId String
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Favorite {
   id     String   @id @default(uuid())
   added  DateTime @default(now())
   work   Word     @relation(fields: [wordId], references: [id])

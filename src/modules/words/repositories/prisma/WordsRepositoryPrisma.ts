@@ -69,4 +69,8 @@ export class WordsRepositoryPrisma implements IWordsRepository {
 
     return total;
   }
+
+  async createFavorite(userId: string, wordId: string): Promise<void> {
+    await prisma.favorite.create({ data: { userId, wordId } });
+  }
 }

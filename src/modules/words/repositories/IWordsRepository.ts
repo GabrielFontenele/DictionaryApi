@@ -17,4 +17,5 @@ export interface IWordsRepository {
       };
     })[]
   >;
+  createFavorite(userId: string, wordId: string): Promise<void>;
 }
