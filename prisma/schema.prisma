@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  proviewFeatures = ["selectRelationCount", "fullTextSearch"]
 }
 
 datasource db {
@@ -11,13 +12,24 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String    @id @default(uuid())
   name     String
-  email    String @unique
+  email    String    @unique
   password String
+  History  History[]
 }
 
 model Word {
-  id   String @id @default(uuid())
-  word String
+  id      String    @id @default(uuid())
+  word    String
+  History History[]
+}
+
+model History {
+  id     String   @id @default(uuid())
+  added  DateTime @default(now())
+  work   Word     @relation(fields: [wordId], references: [id])
+  wordId String
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
 }

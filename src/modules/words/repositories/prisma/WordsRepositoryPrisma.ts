@@ -1,4 +1,6 @@
+import { ICreateHistoryDTO } from "@modules/words/dtos/ICreateHistoryDTO";
 import { ICreateWordDTO } from "@modules/words/dtos/ICreateWordDTO";
+import { ISearchDTO } from "@modules/words/dtos/ISearchTDO";
 import { Word } from "@prisma/client";
 import { prisma } from "@shared/prisma";
 
@@ -9,7 +11,56 @@ export class WordsRepositoryPrisma implements IWordsRepository {
     await prisma.word.createMany({ data, skipDuplicates: true });
   }
 
-  async findLikeByWord(word: string): Promise<Word | null> {
-    throw new Error("Method not implemented.");
+  async createManyHistoric(data: ICreateHistoryDTO[]): Promise<void> {
+    await prisma.history.createMany({ data });
+  }
+
+  async findLikeByWord({ search, skip, take }: ISearchDTO): Promise<Word[]> {
+    const words = await prisma.word.findMany({
+      where: {
+        word: {
+          startsWith: search,
+        },
+      },
+      orderBy: {
+        word: "asc",
+      },
+      skip,
+      take,
+    });
+    return words;
+  }
+  async findLikeByWordCount(search: string): Promise<number> {
+    const total = await prisma.word.count({
+      where: {
+        word: {
+          contains: search,
+        },
+      },
+    });
+    return total;
+  }
+
+  async getTotalOfHistoriesByUser(userId: string): Promise<
+    (Word & {
+      _count: {
+        History: number;
+      };
+    })[]
+  > {
+    const total = await prisma.word.findMany({
+      include: {
+        _count: {
+          select: {
+            History: true,
+          },
+        },
+        History: {
+          where: { userId },
+        },
+      },
+    });
+
+    return total;
   }
 }
