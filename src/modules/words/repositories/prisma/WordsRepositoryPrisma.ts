@@ -15,6 +15,11 @@ export class WordsRepositoryPrisma implements IWordsRepository {
     await prisma.history.createMany({ data });
   }
 
+  async findByWord(search: string): Promise<Word | null> {
+    const word = await prisma.word.findFirst({ where: { word: search } });
+    return word;
+  }
+
   async findLikeByWord({ search, skip, take }: ISearchDTO): Promise<Word[]> {
     const words = await prisma.word.findMany({
       where: {
