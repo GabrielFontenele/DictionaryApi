@@ -16,3 +16,8 @@ model User {
   email    String @unique
   password String
 }
+
+model Word {
+  id   String @id @default(uuid())
+  word String
+}

@@ -8,6 +8,7 @@
     "test:e2e": "jest --config jest-e2e.config.ts --runInBand",
     "prisma:Generate": "prisma generate",
     "dev": "ts-node-dev -r tsconfig-paths/register --poll --inspect --transpile-only --ignore-watch node_modules --respawn ./src/server.ts",
+    "seed": "ts-node -r tsconfig-paths/register ./src/shared/helpers/WordsSeeder.ts",
     "start": "node -r tsconfig-paths/register -r ts-node/register ./src/server.ts"
   },
   "keywords": [],
