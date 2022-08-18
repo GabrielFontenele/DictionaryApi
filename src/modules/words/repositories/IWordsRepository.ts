@@ -1,4 +1,4 @@
-import { Word } from "@prisma/client";
+import { Favorite, Word } from "@prisma/client";
 
 import { ICreateHistoryDTO } from "../dtos/ICreateHistoryDTO";
 import { ICreateWordDTO } from "../dtos/ICreateWordDTO";
@@ -18,4 +18,6 @@ export interface IWordsRepository {
     })[]
   >;
   createFavorite(userId: string, wordId: string): Promise<void>;
+  findFavorite(userId: string, wordId: string): Promise<Favorite | null>;
+  deleteFavorite(id: string): Promise<void>;
 }
