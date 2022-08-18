@@ -1,7 +1,8 @@
 import { ICreateHistoryDTO } from "@modules/words/dtos/ICreateHistoryDTO";
 import { ICreateWordDTO } from "@modules/words/dtos/ICreateWordDTO";
+import { IFindDTO } from "@modules/words/dtos/IFindDTO";
 import { ISearchDTO } from "@modules/words/dtos/ISearchTDO";
-import { Favorite, Word } from "@prisma/client";
+import { Favorite, History, Word } from "@prisma/client";
 import { prisma } from "@shared/prisma";
 
 import { IWordsRepository } from "../IWordsRepository";
@@ -83,5 +84,32 @@ export class WordsRepositoryPrisma implements IWordsRepository {
 
   async deleteFavorite(id: string): Promise<void> {
     await prisma.favorite.delete({ where: { id } });
+  }
+
+  async findHistory({ userId, skip, take }: IFindDTO): Promise<
+    (History & {
+      word: {
+        word: string;
+      };
+    })[]
+  > {
+    const history = await prisma.history.findMany({
+      include: {
+        word: {
+          select: {
+            word: true,
+          },
+        },
+      },
+      where: { userId },
+      skip,
+      take,
+    });
+    return history;
+  }
+
+  async countHistory(userId: string): Promise<number> {
+    const numberOfHistory = await prisma.history.count({ where: { userId } });
+    return numberOfHistory;
   }
 }

@@ -1,7 +1,8 @@
-import { Favorite, Word } from "@prisma/client";
+import { Favorite, History, Word } from "@prisma/client";
 
 import { ICreateHistoryDTO } from "../dtos/ICreateHistoryDTO";
 import { ICreateWordDTO } from "../dtos/ICreateWordDTO";
+import { IFindDTO } from "../dtos/IFindDTO";
 import { ISearchDTO } from "../dtos/ISearchTDO";
 
 export interface IWordsRepository {
@@ -20,4 +21,12 @@ export interface IWordsRepository {
   createFavorite(userId: string, wordId: string): Promise<void>;
   findFavorite(userId: string, wordId: string): Promise<Favorite | null>;
   deleteFavorite(id: string): Promise<void>;
+  findHistory(data: IFindDTO): Promise<
+    (History & {
+      word: {
+        word: string;
+      };
+    })[]
+  >;
+  countHistory(userId: string): Promise<number>;
 }
