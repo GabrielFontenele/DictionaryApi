@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 
+import { profilesRoutes } from "./profiles.routes";
 import { usersRoutes } from "./users.routes";
 import { wordsRoutes } from "./words.routes";
 
@@ -11,5 +12,6 @@ router.get("/", (request: Request, response: Response) =>
 
 router.use("/auth", usersRoutes);
 router.use("/entries", wordsRoutes);
+router.use("/user", profilesRoutes);
 
 export { router };
