@@ -21,7 +21,7 @@ export interface IWordsRepository {
   createFavorite(userId: string, wordId: string): Promise<void>;
   findFavorite(userId: string, wordId: string): Promise<Favorite | null>;
   deleteFavorite(id: string): Promise<void>;
-  findHistory(data: IFindDTO): Promise<
+  listHistory(data: IFindDTO): Promise<
     (History & {
       word: {
         word: string;
@@ -29,4 +29,12 @@ export interface IWordsRepository {
     })[]
   >;
   countHistory(userId: string): Promise<number>;
+  listFavorite(data: IFindDTO): Promise<
+    (Favorite & {
+      word: {
+        word: string;
+      };
+    })[]
+  >;
+  countFavorite(userId: string): Promise<number>;
 }

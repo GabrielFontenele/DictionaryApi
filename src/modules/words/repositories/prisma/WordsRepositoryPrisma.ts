@@ -86,7 +86,7 @@ export class WordsRepositoryPrisma implements IWordsRepository {
     await prisma.favorite.delete({ where: { id } });
   }
 
-  async findHistory({ userId, skip, take }: IFindDTO): Promise<
+  async listHistory({ userId, skip, take }: IFindDTO): Promise<
     (History & {
       word: {
         word: string;
@@ -111,5 +111,32 @@ export class WordsRepositoryPrisma implements IWordsRepository {
   async countHistory(userId: string): Promise<number> {
     const numberOfHistory = await prisma.history.count({ where: { userId } });
     return numberOfHistory;
+  }
+
+  async listFavorite({ userId, skip, take }: IFindDTO): Promise<
+    (Favorite & {
+      word: {
+        word: string;
+      };
+    })[]
+  > {
+    const favorite = await prisma.favorite.findMany({
+      include: {
+        word: {
+          select: {
+            word: true,
+          },
+        },
+      },
+      where: { userId },
+      skip,
+      take,
+    });
+    return favorite;
+  }
+
+  async countFavorite(userId: string): Promise<number> {
+    const numberOfFavorite = await prisma.favorite.count({ where: { userId } });
+    return numberOfFavorite;
   }
 }
