@@ -17,5 +17,5 @@ const deleteFavoriteController = new DeleteFavoriteController();
 wordsRoutes.use(ensureAuthenticated);
 wordsRoutes.get("/en", listWordsController.handle);
 wordsRoutes.get("/en/:word", showWordController.handle);
-wordsRoutes.get("/en/:word/favorite", saveFavoriteController.handle);
-wordsRoutes.get("/en/:word/unfavorite", deleteFavoriteController.handle);
+wordsRoutes.post("/en/:word/favorite", saveFavoriteController.handle);
+wordsRoutes.delete("/en/:word/unfavorite", deleteFavoriteController.handle);
