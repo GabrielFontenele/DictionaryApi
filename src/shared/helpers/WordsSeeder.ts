@@ -14,11 +14,15 @@ export class WordsSeeder {
   async execute(): Promise<void> {
     const response = await axios.get(this.baseUrl);
     const words = response.data.split("\n");
-    const wordsDTO: ICreateWordDTO[] = words.map((item: string) => {
-      return {
-        word: item,
-      } as ICreateWordDTO;
+    const wordsDTO: ICreateWordDTO[] = [];
+    const regex = /^[A-Za-z]+$/;
+
+    words.forEach((item: string) => {
+      if (regex.test(item)) {
+        wordsDTO.push({ word: item });
+      }
     });
+
     this.wordsRepository.createMany(wordsDTO);
   }
 }
