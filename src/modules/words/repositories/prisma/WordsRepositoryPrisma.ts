@@ -101,6 +101,7 @@ export class WordsRepositoryPrisma implements IWordsRepository {
           },
         },
       },
+      orderBy: [{ added: "desc" }],
       where: { userId },
       skip,
       take,

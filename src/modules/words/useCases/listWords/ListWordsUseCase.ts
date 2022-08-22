@@ -1,6 +1,7 @@
 import { ICreateHistoryDTO } from "@modules/words/dtos/ICreateHistoryDTO";
 import { IListWordsDTO } from "@modules/words/dtos/IListWordsDTO";
 import { IWordsRepository } from "@modules/words/repositories/IWordsRepository";
+import { AppError } from "@shared/errors/AppError";
 
 export class ListWordsUseCase {
   constructor(private wordsRepository: IWordsRepository) {}
@@ -8,13 +9,18 @@ export class ListWordsUseCase {
   async execute(
     search: string,
     limit: number,
+    page: number,
     userId: string,
   ): Promise<IListWordsDTO> {
-    const total = await this.wordsRepository.findLikeByWordCount(search);
+    if (!page) throw new AppError("Invalid page number provided");
+
+    const skip = page === 1 ? 0 : limit * (page - 1);
+
+    const totalDocs = await this.wordsRepository.findLikeByWordCount(search);
 
     const searchResults = await this.wordsRepository.findLikeByWord({
       search,
-      skip: 0,
+      skip,
       take: limit,
     });
 
@@ -31,15 +37,15 @@ export class ListWordsUseCase {
 
     await this.wordsRepository.createManyHistoric(historyDTO);
 
-    const numberOfPages = Math.ceil(total / limit);
+    const numberOfPages = Math.ceil(totalDocs / limit);
 
     const listWords: IListWordsDTO = {
       results,
-      totalDocs: total,
-      page: 1,
+      totalDocs,
+      page,
       totalPages: numberOfPages,
-      hasNext: total > limit,
-      hasPrev: false,
+      hasNext: totalDocs > skip + searchResults.length,
+      hasPrev: page > 1,
     };
 
     return listWords;

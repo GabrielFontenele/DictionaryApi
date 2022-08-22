@@ -5,7 +5,7 @@ import { AppError } from "@shared/errors/AppError";
 export class ListFavoritesUseCase {
   constructor(private wordsRepository: IWordsRepository) {}
   async execute(userId: string, page: number): Promise<IListDTO> {
-    const itensPerPage = 5;
+    const itensPerPage = 100;
 
     if (!page) throw new AppError("Invalid page number provided");
 

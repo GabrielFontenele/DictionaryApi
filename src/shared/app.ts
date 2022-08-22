@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import cors from "cors";
 import express, { Request, Response, NextFunction } from "express";
 
 import "express-async-errors";
@@ -9,15 +10,12 @@ import { AppError } from "./errors/AppError";
 
 export const app = express();
 
-app.use((req, res, next) => {
-  // console.log(req.headers.origin);
-  res.header("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
-  );
-  next();
-});
+app.use(
+  cors({
+    exposedHeaders: ["custom-header"],
+    origin: "http://127.0.0.1:5173",
+  }),
+);
 
 app.use(express.json());
 
